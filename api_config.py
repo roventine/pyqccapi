@@ -1,6 +1,7 @@
 import yaml
 import requests
 import json
+import pywildcard
 
 
 def to_config(path_yaml: str):
@@ -76,7 +77,7 @@ def to_method_detail_list():
     url = 'https://openapi.qcc.com/API/DataApiDetail/getApiMethodDetailInfo'
     data = {
         'apiId': '',
-        'methodApiId':''
+        'methodApiId': ''
     }
     method_detail_list = []
     method_list = deserialize('method_list.json')
@@ -99,4 +100,40 @@ def to_method_url_dict():
     for method_detail in method_detail_list:
         method_url_dict[method_detail['Method']['methodApiId']] = method_detail['Titles']['paramList']['apiUrl']
     return method_url_dict
+
+
+def md_to_rst(from_file, to_file):
+    response = requests.post(
+        url='http://c.docverter.com/convert',
+        data={'to': 'rst', 'from': 'markdown'},
+        files={'input_files[]': open(from_file, 'rb')}
+    )
+
+    if response.ok:
+        with open(to_file, "wb") as f:
+            f.write(response.content)
+
+
+def prettify(data):
+    print(json.dumps(data, sort_keys=True, indent=4, separators=(', ', ': '), ensure_ascii=False))
+
+
+def view_method(pattern):
+    result = []
+    method_list = deserialize('method_list.json')
+    for method in method_list:
+        if pywildcard.fnmatch(method['methodApiName'],pattern) or pywildcard.fnmatch(method['apiTitle'],pattern):
+            result.append(method)
+    prettify(result)
+
+
+def view_method_detail(pattern):
+    result = []
+    method_detail_list = deserialize('method_detail_list.json')
+    for method_detail in method_detail_list:
+        if pywildcard.fnmatch(method_detail['Method']['methodApiName'],pattern) or \
+                pywildcard.fnmatch(method_detail['Method']['apiTitle'],pattern):
+            result.append(method_detail)
+    prettify(result)
+
 

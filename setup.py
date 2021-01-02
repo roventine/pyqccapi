@@ -9,8 +9,8 @@ setuptools.setup(
     author="roventine",
     author_email="ukyotachibana@yeah.net",
     description="simple api invoker for qcc",
-    long_description=long_description,
-    long_description_content_type="text/markdown",
+    # long_description=long_description,
+    # long_description_content_type="text/markdown",
     url="https://github.com/roventine/pyqccapi",
     packages=setuptools.find_packages(),
     classifiers=[
@@ -19,5 +19,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    install_requires=['requests', 'PyYAML'],
+    install_requires=['requests', 'PyYAML','pywildcard'],
 )
