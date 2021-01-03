@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pyqccapi",
-    version="0.0.1",
+    version="0.1.2",
     author="roventine",
     author_email="ukyotachibana@yeah.net",
     description="simple api invoker for qcc",
@@ -13,6 +13,7 @@ setuptools.setup(
     # long_description_content_type="text/markdown",
     url="https://github.com/roventine/pyqccapi",
     packages=setuptools.find_packages(),
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
