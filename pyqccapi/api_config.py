@@ -140,3 +140,5 @@ def view_method_detail(pattern):
             result.append(method_detail)
     prettify(result)
 
+
+
