@@ -6,6 +6,7 @@ import os
 
 dir = os.path.dirname(os.path.abspath(__file__))
 
+
 def to_config(path_yaml: str):
     with open(path_yaml, 'r', encoding='utf-8') as f:
         return yaml.load(f.read(), Loader=yaml.FullLoader)
@@ -23,13 +24,13 @@ headers = {
 }
 
 
-def deserialize(p):
+def of_json(p):
     p = os.path.join(dir, p)
     with open(p, 'r', encoding='utf-8') as f:
         return json.load(f)
 
 
-def serialize(p, l):
+def to_json(p, l):
     p = os.path.join(dir, p)
     with open(p, 'w', encoding='utf-8') as f:
         json.dump(l, f, ensure_ascii=False)
@@ -40,7 +41,7 @@ def to_category_list():
     r = requests.post(url=url, headers=headers)
     if r.status_code == 200:
         result = r.json()['result']
-        serialize('category_list.json', result)
+        to_json('category_list.json', result)
 
 
 def to_api_list():
@@ -53,7 +54,7 @@ def to_api_list():
     r = requests.post(url=url, headers=headers, data=data)
     if r.status_code == 200:
         api_list = r.json()['result']['apiPage']['list']
-        serialize('api_list.json', api_list)
+        to_json('api_list.json', api_list)
 
 
 def to_method_list():
@@ -62,7 +63,7 @@ def to_method_list():
         'apiId': ''
     }
     method_list = []
-    api_list = deserialize('api_list.json')
+    api_list = of_json('api_list.json')
     for api in api_list:
         data['apiId'] = api['Id']
         r = requests.post(url=url, headers=headers, data=data)
@@ -74,7 +75,7 @@ def to_method_list():
                 method_list.append(method)
         else:
             print(r.status_code)
-    serialize('method_list.json', method_list)
+    to_json('method_list.json', method_list)
 
 
 def to_method_detail_list():
@@ -84,7 +85,7 @@ def to_method_detail_list():
         'methodApiId': ''
     }
     method_detail_list = []
-    method_list = deserialize('method_list.json')
+    method_list = of_json('method_list.json')
     for method in method_list:
         data['apiId'] = method['apiId']
         data['methodApiId'] = method['methodApiId']
@@ -95,50 +96,35 @@ def to_method_detail_list():
             method_detail_list.append(detail)
         else:
             print(r.status_code)
-    serialize('method_detail_list.json', method_detail_list)
+    to_json('method_detail_list.json', method_detail_list)
 
 
 def to_method_url_dict():
     method_url_dict = {}
-    method_detail_list = deserialize('method_detail_list.json')
+    method_detail_list = of_json('method_detail_list.json')
     for method_detail in method_detail_list:
         method_url_dict[method_detail['Method']['methodApiId']] = method_detail['Titles']['paramList']['apiUrl']
     return method_url_dict
 
 
-def md_to_rst(from_file, to_file):
-    response = requests.post(
-        url='http://c.docverter.com/convert',
-        data={'to': 'rst', 'from': 'markdown'},
-        files={'input_files[]': open(from_file, 'rb')}
-    )
-
-    if response.ok:
-        with open(to_file, "wb") as f:
-            f.write(response.content)
-
-
-def prettify(data):
-    print(json.dumps(data, sort_keys=True, indent=4, separators=(', ', ': '), ensure_ascii=False))
+def format_json(j):
+    print(json.dumps(j, sort_keys=True, indent=4, separators=(', ', ': '), ensure_ascii=False))
 
 
 def view_method(pattern):
     result = []
-    method_list = deserialize('method_list.json')
+    method_list = of_json('method_list.json')
     for method in method_list:
-        if pywildcard.fnmatch(method['methodApiName'],pattern) or pywildcard.fnmatch(method['apiTitle'],pattern):
+        if pywildcard.fnmatch(method['methodApiName'], pattern) or pywildcard.fnmatch(method['apiTitle'], pattern):
             result.append(method)
-    prettify(result)
+    format_json(result)
 
 
 def view_method_detail(pattern):
     result = []
-    method_detail_list = deserialize('method_detail_list.json')
+    method_detail_list = of_json('method_detail_list.json')
     for method_detail in method_detail_list:
-        if pywildcard.fnmatch(method_detail['Method']['methodApiName'],pattern) or \
-                pywildcard.fnmatch(method_detail['Method']['apiTitle'],pattern):
+        if pywildcard.fnmatch(method_detail['Method']['methodApiName'], pattern) or \
+                pywildcard.fnmatch(method_detail['Method']['apiTitle'], pattern):
             result.append(method_detail)
-    prettify(result)
-
-
-
+    format_json(result)
