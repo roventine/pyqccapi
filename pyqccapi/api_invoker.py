@@ -30,7 +30,6 @@ class Task:
 
 
 class ApiInvoker:
-
     def __init__(self,
                  config_path: str,
                  task: Task):

@@ -128,3 +128,11 @@ def view_method_detail(pattern):
                 pywildcard.fnmatch(method_detail['Method']['apiTitle'], pattern):
             result.append(method_detail)
     format_json(result)
+
+
+def refresh_api_config():
+    to_category_list()
+    to_api_list()
+    to_method_list()
+    to_method_detail_list()
+
