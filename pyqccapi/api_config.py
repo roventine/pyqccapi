@@ -135,4 +135,3 @@ def refresh_api_config():
     to_api_list()
     to_method_list()
     to_method_detail_list()
-
