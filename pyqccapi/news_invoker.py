@@ -112,6 +112,7 @@ class NewsInvoker:
             self.news_task.data = news_list
             self.news_task.success = True
 
+
         except Exception as ignored:
             print(str(ignored))
 
@@ -126,11 +127,14 @@ class NewsInvoker:
             news_list = []
 
             summary_list = self.to_news_summary_list()
+            if len(summary_list) == 0:
+                return self
             for summary in summary_list:
                 news_list.append(self.to_news_detail_by_summary(summary))
 
             self.news_task.data = news_list
             self.news_task.success = True
+            self.news_task.code = 200
 
         except Exception as ignored:
             print(str(ignored))
