@@ -151,14 +151,15 @@ class NewsTaskEncoder(json.JSONEncoder):
             return {
                 'method': obj.method,
                 'params': obj.params,
-                'success':obj.success,
-                'code':obj.code,
-                'message':obj.message,
-                'data':obj.data,
-                'type':obj.type.value
+                'success': obj.success,
+                'code': obj.code,
+                'message': obj.message,
+                'data': obj.data,
+                'type': obj.type.value
             }
         return json.JSONEncoder.default(self, obj)
 
-s = to_period_news_collection('20210101', '20210201')
-with open('news_collection_20210101_20210201.json', 'w', encoding='utf-8') as f:
-    json.dump(s, f, ensure_ascii=False, indent=4,cls=NewsTaskEncoder)
+
+s = to_period_news_collection('20200101', '20201231')
+with open('news_collection_20200101_20201231.json', 'w', encoding='utf-8') as f:
+    json.dump(s, f, ensure_ascii=False, indent=4, cls=NewsTaskEncoder)
