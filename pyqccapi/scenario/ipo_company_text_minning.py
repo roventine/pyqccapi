@@ -1,8 +1,6 @@
-import json
-
-from pyqccapi.api_invoker import ApiInvoker, Task
-from pyqccapi.news_invoker import NewsInvoker, NewsTask
-import datetime
+from pyqccapi.invoker.api_invoker import ApiInvoker, Task
+from pyqccapi.scenario.news_invoker import NewsInvoker, NewsTask
+from pyqccapi.util.dates import *
 
 ipo_company_list = {
     '上海之江生物科技股份有限公司',
@@ -108,7 +106,7 @@ uni_id_map = {
 }
 
 
-def to_daily_news_collection(d):
+def to_news_collection_by_date(d):
     daily_news = []
     for k, v in uni_id_map.items():
         news_task = NewsTask(method='',
@@ -123,43 +121,16 @@ def to_daily_news_collection(d):
     return daily_news
 
 
-def to_days_diff(start, end):
-    dt_start = datetime.datetime.strptime(start, '%Y%m%d')
-    dt_end = datetime.datetime.strptime(end, '%Y%m%d')
-    diff = dt_end - dt_start
-    return diff.days
-
-
-def to_date_after(base, days):
-    dt_base = datetime.datetime.strptime(base, '%Y%m%d')
-    dt_after = dt_base + datetime.timedelta(days=days)
-    return dt_after.strftime('%Y%m%d')
-
-
-def to_period_news_collection(start, end):
+def to_news_collection_by_period(start, end):
     period_news = {}
     days_diff = to_days_diff(start, end)
     for i in range(days_diff):
         date_after = to_date_after(start, i)
-        period_news[date_after] = to_daily_news_collection(date_after)
+        period_news[date_after] = to_news_collection_by_date(date_after)
     return period_news
 
 
-class NewsTaskEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, NewsTask):
-            return {
-                'method': obj.method,
-                'params': obj.params,
-                'success': obj.success,
-                'code': obj.code,
-                'message': obj.message,
-                'data': obj.data,
-                'type': obj.type.value
-            }
-        return json.JSONEncoder.default(self, obj)
 
-
-s = to_period_news_collection('20200101', '20201231')
-with open('news_collection_20200101_20201231.json', 'w', encoding='utf-8') as f:
-    json.dump(s, f, ensure_ascii=False, indent=4, cls=NewsTaskEncoder)
+# s = to_period_news_collection('20200101', '20201231')
+# with open('news_collection_20200101_20201231.json', 'w', encoding='utf-8') as f:
+#     json.dump(s, f, ensure_ascii=False, indent=4, cls=NewsTaskEncoder)

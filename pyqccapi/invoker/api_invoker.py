@@ -1,39 +1,21 @@
 import hashlib
 import time
-from enum import Enum
 
 import requests
 
-from pyqccapi import api_config
 from pyqccapi.constant import error_code
+from pyqccapi.invoker.api_task import *
+from pyqccapi.util.yamls import *
 
 encode = 'utf-8'
 url_base = 'http://api.qichacha.com/'
-
-dict_method_url = api_config.to_method_url_dict()
-
-
-class TaskType(Enum):
-    BASE = 0
-    NEWS = 1
-
-
-class Task:
-    def __init__(self, method, params):
-        self.method = method
-        self.params = params
-        self.success = False
-        self.code = ''
-        self.message = ''
-        self.data = None
-        self.type = TaskType.BASE
 
 
 class ApiInvoker:
     def __init__(self,
                  config_path: str,
                  task: Task):
-        self.config = api_config.to_config(config_path)
+        self.config = of_yaml(config_path)
         self.task = task
 
     def to_token(self, timespan):
@@ -47,7 +29,7 @@ class ApiInvoker:
         return {'Token': self.to_token(timespan), 'Timespan': timespan}
 
     def invoke(self):
-        url_req = dict_method_url[self.task.method]
+        url_req = self.task.to_request_url()
         params = self.task.params
         params['key'] = self.config['appkey']
 
@@ -73,7 +55,5 @@ class ApiInvoker:
 
     def to_task(self):
         return self.task
-
-
 
 

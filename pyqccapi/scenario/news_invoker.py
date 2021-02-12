@@ -1,6 +1,6 @@
 from multiprocessing import Pool, cpu_count
 
-from pyqccapi.api_invoker import ApiInvoker, Task, TaskType
+from pyqccapi.invoker.api_invoker import ApiInvoker, Task, TaskType
 from pyqccapi.constant import news_category
 
 
