@@ -8,7 +8,7 @@ setuptools.setup(
     version="0.1.3",
     author="roventine",
     author_email="ukyotachibana@yeah.net",
-    description="simple api invoker for qcc",
+    description="simple api task for qcc",
     # long_description=long_description,
     # long_description_content_type="text/markdown",
     url="https://github.com/roventine/pyqccapi",

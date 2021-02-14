@@ -1,5 +1,5 @@
 import json
-from pyqccapi.invoker.api_invoker import Task
+from pyqccapi.task.task_invoker import Task
 
 
 class TaskEncoder(json.JSONEncoder):

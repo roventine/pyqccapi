@@ -7,6 +7,12 @@ from pyqccapi.util.jsons import *
 
 
 class ApiConfig:
+    """
+    配置相关类
+    用于https://www.qcc.com的category,api,method及其详情的同步
+    同时提供全局唯一的api相关配置信息管理
+    """
+
     path_api_config = os.path.dirname(os.path.abspath(__file__))
 
     headers = {
@@ -135,4 +141,3 @@ class ApiConfig:
 
 config_instance = ApiConfig()
 
-format_json(config_instance.method_list)

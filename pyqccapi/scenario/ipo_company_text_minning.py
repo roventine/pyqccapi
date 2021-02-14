@@ -1,6 +1,7 @@
-from pyqccapi.invoker.api_invoker import ApiInvoker, Task
-from pyqccapi.scenario.news_invoker import NewsInvoker, NewsTask
+from pyqccapi.task.task_invoker import ApiInvoker, Task
 from pyqccapi.util.dates import *
+from pyqccapi.constant import *
+from pyqccapi.util.logger import logger
 
 ipo_company_list = {
     '上海之江生物科技股份有限公司',
@@ -105,19 +106,120 @@ uni_id_map = {
     '上海芯龙半导体技术股份有限公司': '913100005964495291'
 }
 
+# 从全局变量中获取比较合适
+path_config = ''
+
+
+def to_task_invoker(task: Task):
+    return ApiInvoker(path_config, task)
+
+
+def to_news_detail(id_news: str) -> Task:
+    """
+    根据新闻id获取新闻内容
+    :param id_news:
+    :return:一个字典，包含调用结果
+    """
+    method_id = '7501bee3-4242-4e72-aec3-4ed756c8e6a0'
+    params = {
+        'id': id_news
+    }
+    task = Task(method_id, params)
+    return to_task_invoker(task) \
+        .invoke() \
+        .to_task()
+
+
+def to_news_summary_list(id_uni: str, dt: str):
+    method_id = '3a5dd06b-aec5-445d-9b91-82be4d5b884b'
+    page_size = 50
+    summary_list = []
+
+    params = {
+        'searchKey': id_uni,
+        'startDate': dt,
+        'endDate': dt,
+        'pageSize': page_size,
+        'pageIndex': 1
+    }
+    task = Task(method_id, params)
+    t = to_task_invoker(task).invoke().to_task()
+
+    if t.success:
+        total = t.data['Paging']['TotalRecords']
+    else:
+        task.code = t.code
+        task.message = t.message
+        return summary_list
+
+    page_count = total // page_size + 1
+
+    for i in range(page_count + 1)[1:]:
+        params['pageIndex'] = i
+        task = Task(method_id, params)
+        task = to_task_invoker(task).invoke().to_task()
+        if task.success:
+            for summary in task.data['Result']:
+                category_names = []
+                category_list = str(summary['Category']).split(',')
+                for category in category_list:
+                    category_names.append(news_category.get(category, ''))
+                summary['CategoryName'] = ','.join(category_names)
+                summary_list.append(summary)
+
+    return summary_list
+
+
+def to_news_detail(id_news: str):
+    """
+    根据新闻id获取新闻内容
+    :param id_news:
+    :return:一个字典，包含调用结果
+    """
+    method_id = '7501bee3-4242-4e72-aec3-4ed756c8e6a0'
+    params = {
+        'id': id_news
+    }
+    task = Task(method_id, params)
+    return to_task_invoker(task).invoke().to_task()
+
+
+def to_news_detail_by_summary(news: dict):
+    """
+    根据新闻摘要，填充新闻内容
+    :param news:新闻摘要字典
+    :return:填充内容后的完整新闻内容，如果调用失败则不填充
+    """
+    t = to_news_detail(news['NewsId'])
+    if t.success:
+        news['Content'] = t.data['Result']['Content']
+    return news
+
+
+def to_news_detail_list(id_uni: str, dt: str):
+    """
+    一个容忍失败的版本，适合调用且只调用一次的场景
+    :return:
+    """
+    try:
+        news_list = []
+
+        summary_list = to_news_summary_list(id_uni,dt)
+        if len(summary_list) == 0:
+            return news_list
+        for summary in summary_list:
+            news_list.append(to_news_detail_by_summary(summary))
+
+    except Exception as e:
+        logger.error(e)
+
+    return news_list
+
 
 def to_news_collection_by_date(d):
-    daily_news = []
+    daily_news = {}
     for k, v in uni_id_map.items():
-        news_task = NewsTask(method='',
-                             params={
-                                 'id_uni': v,
-                                 'dt': d
-                             })
-        news_task = NewsInvoker(config_path='../config.yaml',
-                                news_task=news_task).invoke().to_task()
-        if news_task.code == 200:
-            daily_news.append(news_task)
+        daily_news[v] = to_news_detail_list(v,d)
     return daily_news
 
 
@@ -128,8 +230,6 @@ def to_news_collection_by_period(start, end):
         date_after = to_date_after(start, i)
         period_news[date_after] = to_news_collection_by_date(date_after)
     return period_news
-
-
 
 # s = to_period_news_collection('20200101', '20201231')
 # with open('news_collection_20200101_20201231.json', 'w', encoding='utf-8') as f:
