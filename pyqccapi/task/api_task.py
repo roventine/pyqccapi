@@ -1,5 +1,7 @@
 from pyqccapi.base.api_config import config_instance
-from pyqccapi.task.task_invoker import ApiInvoker
+
+
+import uuid
 
 
 class Task:
@@ -19,6 +21,20 @@ class Task:
 
     def to_request_url(self):
         return self.to_method_detail()['Titles']['paramList']['apiUrl']
+
+
+class AsyncTask(Task):
+    """
+    异步任务，所以它需要一个id
+    因为懒，使用uuid4算了
+    正确的做法：
+    分布式环境下：机器名+时间戳+自增序列
+    单机环境下：md5(mac/机器名+时间戳+salt)+自增序列
+    """
+    def __init__(self,method,params):
+        Task.__init__(self,method,params)
+        self.id = uuid.uuid4().hex
+
 
 
 
