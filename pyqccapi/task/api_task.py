@@ -1,4 +1,5 @@
 from pyqccapi.base.api_config import config_instance
+from pyqccapi.task.task_invoker import ApiInvoker
 
 
 class Task:
@@ -18,5 +19,7 @@ class Task:
 
     def to_request_url(self):
         return self.to_method_detail()['Titles']['paramList']['apiUrl']
+
+
 
 
