@@ -6,7 +6,7 @@ task_queue = Queue()
 result_queue = Queue()
 
 
-def task_producer_proxy(task: Task):
+def task_producer_proxy(task: AsyncTask):
     task_queue.put(task)
 
 
