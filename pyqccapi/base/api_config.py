@@ -26,7 +26,16 @@ class ApiConfig:
         "cookie": "Hm_lvt_5cd3bf91755d53008b430f15579b08c6=1609471544; _uab_collina=160947879460966050149085; token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIiLCJjcmVhdGVUaW1lIjoxNjA5NTEwNDI2LCJhY2NvdW50Tm8iOiIxODkxNzYxODUwOSIsImlzcyI6IlNhY2hpZWwuWmhhbyIsInVzZXJJZCI6ImUzMTJmMWRkN2Q4M2U0ZDQyM2IyODg2NzY5ZjZjYWY1In0.gaKAuPN2Z0i92dFE6rpbCWxTHoiWUL3F0zp4S9DuRJg; shopCartCnt=0; UserBalance=399.9; isUserAuthentication=false; Hm_lpvt_5cd3bf91755d53008b430f15579b08c6=1609511337; getCurrentDataNav=6c02d82a-ebcc-4a3a-a933-49a4ea5e4087"
     }
 
+    _cfg = None
+
+    @classmethod
+    def to_instance(cls):
+        if ApiConfig._cfg is None:
+            ApiConfig._cfg = ApiConfig()
+        return ApiConfig._cfg
+
     def __init__(self):
+        ApiConfig._cfg = self
         self.method_dict = {}
         self.method_list = []
         self.of_config_files().to_method_dict()
@@ -138,6 +147,4 @@ class ApiConfig:
             self.method_dict[method_detail['Method']['methodApiId']] = method_detail
         return self
 
-
-config_instance = ApiConfig()
 

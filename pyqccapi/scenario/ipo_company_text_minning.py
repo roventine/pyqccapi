@@ -2,6 +2,9 @@ from pyqccapi.task.task_invoker import ApiInvoker, Task
 from pyqccapi.util.dates import *
 from pyqccapi.constant import *
 from pyqccapi.util.logger import logger
+from pyqccapi.environment import *
+
+Environment('config.yaml')
 
 ipo_company_list = {
     '上海之江生物科技股份有限公司',

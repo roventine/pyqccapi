@@ -1,15 +1,14 @@
 import hashlib
 import time
-import json
 
 import requests
 
 from pyqccapi.constant import error_code
-from pyqccapi.task.api_task import *
-from pyqccapi.util.yamls import *
+from pyqccapi.environment import Environment
 from pyqccapi.util.encoders import *
 from pyqccapi.util.logger import logger
-
+from pyqccapi.util.yamls import *
+from pyqccapi.task.api_task import *
 
 encode = 'utf-8'
 url_base = 'http://api.qichacha.com/'
@@ -21,12 +20,11 @@ class ApiInvoker:
     负责接收一个task并执行它，它本身不应该存储task的信息，但需要存储task执行相关的信息
     完成调用日志记录
     Q：为什么会有这么两个类而不是在task中提供invoke方法
-    A：task和它的调用是两回事，task不需要被记录，它的调用才值得被记录
+    A：task和它的调用是两回事，task不需要被记录，它的调用需要被记录--这不绝对，只是这个场景如此（调用的记录就是task的内容）
     """
-    def __init__(self,
-                 config_path: str,
-                 task: Task):
-        self.config = of_yaml(config_path)
+
+    def __init__(self, task: Task):
+        self.config = of_yaml(Environment.to_instance().to_config())
         self.task = task
 
     def to_token(self, timespan):
@@ -45,7 +43,7 @@ class ApiInvoker:
         params = self.task.params
         params['key'] = self.config['appkey']
 
-        logger.info(json.dumps(self.task,ensure_ascii=False,cls=TaskEncoder))
+        logger.info(json.dumps(self.task, ensure_ascii=False, cls=TaskEncoder))
 
         r = requests.get(url=url_req,
                          headers=self.to_header(),
@@ -72,5 +70,3 @@ class ApiInvoker:
 
     def to_task(self):
         return self.task
-
-
