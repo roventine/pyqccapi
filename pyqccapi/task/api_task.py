@@ -1,6 +1,5 @@
 from pyqccapi.base.api_config import ApiConfig
 
-
 import uuid
 
 
@@ -8,6 +7,7 @@ class Task:
     """
     一个实体类，包含一个任务需要的全部信息
     """
+
     def __init__(self, method, params):
         self.method = method
         self.params = params
@@ -31,11 +31,21 @@ class AsyncTask(Task):
     分布式环境下：机器名+时间戳+自增序列
     单机环境下：md5(mac/机器名+时间戳+自增序列+salt)
     """
-    def __init__(self,method,params):
-        Task.__init__(self,method,params)
-        self.id = uuid.uuid4().hex
+
+    def __init__(self, method, params):
+        Task.__init__(self, method, params)
+        self.task_id = uuid.uuid4().hex
 
 
+class AsyncTaskBatch():
+    """
+
+    """
+
+    def __init__(self,
+                 batch_id: str,
+                 task_list: list[AsyncTask]):
+        self.batch_id = batch_id
 
 
 

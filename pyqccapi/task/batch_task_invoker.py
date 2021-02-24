@@ -6,8 +6,15 @@ TASK_QUEUE = Queue(ctx=AsyncTask)
 RESULT_QUEUE = Queue(ctx=AsyncTask)
 
 
+def batch_task_producer_proxy(task_list: list[AsyncTask]):
+    for task in task_list:
+        task_producer_proxy(task)
+
+
 def task_producer_proxy(task: AsyncTask):
     TASK_QUEUE.put(task)
+
+
 
 
 def task_consumer():
