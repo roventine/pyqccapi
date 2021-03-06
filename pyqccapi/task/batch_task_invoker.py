@@ -15,8 +15,6 @@ def task_producer_proxy(task: AsyncTask):
     TASK_QUEUE.put(task)
 
 
-
-
 def task_consumer():
     while True:
         task = TASK_QUEUE.get()
