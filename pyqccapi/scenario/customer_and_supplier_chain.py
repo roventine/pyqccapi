@@ -2,7 +2,7 @@ from pyqccapi.task.task_invoker import ApiInvoker, Task
 
 
 """
-供应链，获取客户的上下游信息
+供应链，获取企业的上下游信息
 """
 
 

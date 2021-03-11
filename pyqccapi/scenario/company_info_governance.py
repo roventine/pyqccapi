@@ -2,7 +2,7 @@ from pyqccapi.task.task_invoker import ApiInvoker, Task
 
 """
 企业客户信息治理
-根据企业名称等线索得到统一社会信用代码
+根据企业名称等线索获取统一社会信用代码
 """
 
 
