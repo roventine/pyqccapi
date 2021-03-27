@@ -37,15 +37,6 @@ class AsyncTask(Task):
         self.task_id = uuid.uuid4().hex
 
 
-class AsyncTaskBatch():
-    """
-
-    """
-
-    def __init__(self,
-                 batch_id: str,
-                 task_list: list[AsyncTask]):
-        self.batch_id = batch_id
 
 
 

@@ -148,4 +148,4 @@ class ApiConfig:
         return self
 
 
-ApiConfig.to_instance().view_method_detail("*工商*")
+# ApiConfig.to_instance().view_method_detail("*工商*")

@@ -26,3 +26,4 @@ def to_uni_code_by_list(companies):
 
 
 
+

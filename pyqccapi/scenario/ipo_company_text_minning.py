@@ -1,10 +1,15 @@
-from pyqccapi.task.task_invoker import ApiInvoker, Task
-from pyqccapi.util.dates import *
-from pyqccapi.constant import *
-from pyqccapi.util.logger import logger
-from pyqccapi.environment import *
+import csv
 
-Environment('config.yaml')
+from pyqccapi.constant import *
+from pyqccapi.environment import *
+from pyqccapi.task.task_invoker import ApiInvoker
+from pyqccapi.util import jsons
+from pyqccapi.util import texts
+from pyqccapi.util.dates import *
+from pyqccapi.util.encoders import *
+from pyqccapi.util.logger import logger
+
+Environment('../config.yaml')
 
 ipo_company_list = {
     '上海之江生物科技股份有限公司',
@@ -114,7 +119,7 @@ path_config = ''
 
 
 def to_task_invoker(task: Task):
-    return ApiInvoker(path_config, task)
+    return ApiInvoker(task)
 
 
 def to_news_detail(id_news: str) -> Task:
@@ -207,7 +212,7 @@ def to_news_detail_list(id_uni: str, dt: str):
     try:
         news_list = []
 
-        summary_list = to_news_summary_list(id_uni,dt)
+        summary_list = to_news_summary_list(id_uni, dt)
         if len(summary_list) == 0:
             return news_list
         for summary in summary_list:
@@ -222,7 +227,7 @@ def to_news_detail_list(id_uni: str, dt: str):
 def to_news_collection_by_date(d):
     daily_news = {}
     for k, v in uni_id_map.items():
-        daily_news[v] = to_news_detail_list(v,d)
+        daily_news[v] = to_news_detail_list(v, d)
     return daily_news
 
 
@@ -234,6 +239,43 @@ def to_news_collection_by_period(start, end):
         period_news[date_after] = to_news_collection_by_date(date_after)
     return period_news
 
-# s = to_period_news_collection('20200101', '20201231')
-# with open('news_collection_20200101_20201231.json', 'w', encoding='utf-8') as f:
-#     json.dump(s, f, ensure_ascii=False, indent=4, cls=NewsTaskEncoder)
+
+def to_news_category_for_human(news_categories: str):
+    l = []
+    if news_categories.find(',') >= 0:
+        for category in news_categories.split(','):
+            l.append(news_category.get(category))
+    else:
+        if len(news_categories)>0:
+            l.append(news_category.get(news_categories))
+    return ','.join(l)
+
+
+def to_news_record(id_uni, news):
+    return [id_uni, news['EmotionType'],
+         to_news_category_for_human(news['Category']),
+         news['NewsTags'],
+         text,
+         news['Url'],
+         news['Source']];
+
+
+# s = to_news_collection_by_period('20210101', '20210331')
+# with open('news_collection_20210101_20210331.json', 'w', encoding='utf-8') as f:
+#     json.dump(s, f, ensure_ascii=False, indent=4, cls=TaskEncoder)
+
+news_result = []
+news_collection = jsons.of_json_file('news_collection_20210101_20210331.json')
+for daily_news_dict in news_collection:
+    for (id_uni, daily_news) in news_collection[daily_news_dict].items():
+        if len(daily_news) > 0:
+            for news in daily_news:
+                content = news['Content']
+                if not content == '':
+                    text = texts.to_text(content)
+                    news_result.append(to_news_record(id_uni, news))
+print(news_result)
+json.dumps(news_result, ensure_ascii=False, indent=4)
+# with open('test.csv', 'w',encoding='utf-8',newline='') as f:
+#     f_csv = csv.writer(f)
+#     f_csv.writerows(news_result)
