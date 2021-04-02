@@ -5,3 +5,6 @@ pywildcard==1.0.10
 PyYAML==5.3.1
 requests==2.25.1
 urllib3==1.26.2
+
+Logbook~=1.5.3
+setuptools~=51.3.3

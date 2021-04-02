@@ -5,10 +5,8 @@ import requests
 
 from pyqccapi.constant import error_code
 from pyqccapi.environment import Environment
-from pyqccapi.util.encoders import *
-from pyqccapi.util.logger import logger
-from pyqccapi.util.yamls import *
 from pyqccapi.task.api_task import *
+from pyqccapi.util.yamls import *
 
 encode = 'utf-8'
 url_base = 'http://api.qichacha.com/'
@@ -43,7 +41,7 @@ class ApiInvoker:
         params = self.task.params
         params['key'] = self.config['appkey']
 
-        logger.info(json.dumps(self.task, ensure_ascii=False, cls=TaskEncoder))
+        # logger.info(json.dumps(self.task, ensure_ascii=False, cls=TaskEncoder))
 
         r = requests.get(url=url_req,
                          headers=self.to_header(),
@@ -64,7 +62,7 @@ class ApiInvoker:
             self.task.code = r.status_code
             # self.task.message = error_code[r.status_code]
 
-        logger.info(json.dumps(self.task, ensure_ascii=False, cls=TaskEncoder))
+        # logger.info(json.dumps(self.task, ensure_ascii=False, cls=TaskEncoder))
 
         return self
 
