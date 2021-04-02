@@ -70,7 +70,7 @@ def to_corp_list_parallel(corp_list: list) -> list:
 
 def purify_corp_name(name: str) -> str:
     """
-    处理企业名称，过滤包括（）以及()结尾的企业，返回处理后的企业名称
+    处理企业名称，过滤包括（*）以及(*)结尾的企业，返回处理后的企业名称
     """
     name = name.strip()
     if name.endswith(")") or name.endswith("）"):
@@ -84,7 +84,7 @@ def purify_corp_name(name: str) -> str:
 
 if __name__ == '__main__':
     corp_list = []
-    with open('/Users/zangqishi/Downloads/ABCSH_CUST_ORG_GOV_FAIL.txt', 'r') as f:
+    with open('CUST_ORG_GOV_FAIL.txt', 'r') as f:
         lines = f.readlines()
         for line in lines:
             cols = line.split('|!')
