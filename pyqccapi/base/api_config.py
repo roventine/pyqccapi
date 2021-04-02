@@ -148,4 +148,4 @@ class ApiConfig:
         return self
 
 
-ApiConfig.to_instance().view_method_detail("客户查询")
+# ApiConfig.to_instance().view_method_detail("客户查询")
