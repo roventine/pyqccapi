@@ -9,69 +9,94 @@ from pyqccapi.scenario.base_scenario import *
 """
 
 
-def to_uni_id_by_name(company_name: str) -> str:
+def to_uni_id_by_name(name: str) -> str:
     """
-
-    :param company_name:
+    根据企业名称，查询企业统一社会代码
+    :param name:
     :return:
     """
     method_id = '8a577c55-6fa9-430a-ab71-d54630713244'
     params = {
-        'searchKey': company_name
+        'searchKey': name
     }
     task = Task(method_id, params)
     task = to_task_invoker(task).invoke().to_task()
     if task.success:
-        uni_id = task.data['Result']['CreditCode']
-    return uni_id
+        return task.data['Result']['CreditCode']
+    return ''
 
 
-def to_corp_info(company: dict) -> dict:
-    company['id_uni'] = to_uni_id_by_name(company['name'])
-    return company
-
-
-def to_corp_list_parallel(company_list: list) -> dict:
+def to_corp_info(corp: dict) -> dict:
     """
+    根据企业名称，填充企业统一社会信用代码，返回企业对象
+    """
+    corp['id_uni'] = to_uni_id_by_name(corp['name'])
+    return corp
 
-    :param company_list:
+
+def to_corp_list(corp_list: list) -> list:
+    """
+    根据企业列表，填充统一社会信用代码，使用串行
+    """
+    new_corp_list = []
+    for corp in corp_list:
+        new_corp_list.append(to_corp_info(corp))
+    return new_corp_list
+
+
+def to_corp_list_parallel(corp_list: list) -> list:
+    """
+    根据企业列表，填充统一社会信用代码，使用并行
+    :param corp_list:
     :return:
     """
 
     futures = []
-    corp_list = []
+    new_corp_list = []
 
     pool = Pool(os.cpu_count())
 
-    for i, company in enumerate(company_list):
-        futures.append(pool.apply_async(func=to_corp_info, args=(company,)))
+    for i, corp in enumerate(corp_list):
+        futures.append(pool.apply_async(func=to_corp_info, args=(corp,)))
 
     pool.close()
     pool.join()
 
     for future in futures:
-        corp_list.append(future.get())
+        new_corp_list.append(future.get())
 
-    return corp_list
+    return new_corp_list
 
 
-def purify(corp_name:str)->str:
-    corp_name = corp_name.strip()
-    if corp_name.endswith(")") or corp_name.endswith("）"):
-        start_pos = corp_name.index("(")
-
+def purify_corp_name(name: str) -> str:
+    """
+    处理企业名称，过滤包括（）以及()结尾的企业，返回处理后的企业名称
+    """
+    name = name.strip()
+    if name.endswith(")") or name.endswith("）"):
+        pos = name.rfind("(")
+        if pos < 0:
+            pos = name.rfind("（")
+        if pos >= 0:
+            return name[0:pos]
+    return name
 
 
 if __name__ == '__main__':
     corp_list = []
-    with open('d:/tmp/ABCSH_CUST_ORG_GOV_FAIL.txt', 'r') as f:
+    with open('/Users/zangqishi/Downloads/ABCSH_CUST_ORG_GOV_FAIL.txt', 'r') as f:
         lines = f.readlines()
         for line in lines:
             cols = line.split('|!')
             id = cols[0]
-            corp_name = purify(cols[1])
+            corp_name = purify_corp_name(cols[1])
             corp_list.append({
                 'id': id,
-                'name':corp_name
-             })
+                'name': corp_name
+            })
+    # print(len(corp_list))
+    corp_list = to_corp_list_parallel(corp_list)
+    import json
 
+    with open('corp_list.json', 'w', encoding='utf-8') as f:
+        json.dump(corp_list, f, ensure_ascii=False, indent=4)
