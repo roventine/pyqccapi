@@ -59,7 +59,3 @@ def to_equity_through_list_parallel(uni_id_list: list) -> list:
     return equity_through_list
 
 
-# if __name__ == '__main__':
-    # result_list = to_equity_through_list_parallel(['91460000MA5T1CK245','91310000054572362X'])
-    # json.dumps(result_list, ensure_ascii=False, indent=4, cls=TaskEncoder)
-    # pass

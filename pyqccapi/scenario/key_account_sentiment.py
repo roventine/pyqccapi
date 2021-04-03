@@ -105,64 +105,17 @@ def to_news_detail_list_by_period(id_uni: str, start: str, end: str) -> list:
     return period_list
 
 
-# def to_news_dict_by_date(dt: str) -> dict:
-#     news_dict = {}
-#     for k, v in uni_id_map.items():
-#         news_dict[v] = to_news_detail_list(v, dt)
-#     return news_dict
-
-
-# def to_news_dict_by_period(start, end):
-#     period_news_dict = {}
-#     days_diff = to_days_diff(start, end)
-#     for i in range(days_diff):
-#         date_after = to_date_after(start, i)
-#         period_news_dict[date_after] = to_news_collection_by_date(date_after)
-#     return period_news
-
-
 def to_news_category_for_human(news_categories: str) -> str:
     """
     将新闻类别翻译为人类能看懂的中文
     :param news_categories:
     :return:
     """
-    l = []
+    name_list = []
     if news_categories.find(',') >= 0:
         for category in news_categories.split(','):
-            l.append(news_category.get(category))
+            name_list.append(news_category.get(category))
     else:
         if len(news_categories) > 0:
-            l.append(news_category.get(news_categories))
-    return ','.join(l)
-
-# def to_news_record(id_uni: str, news: dict):
-#     return [id_uni, news['EmotionType'],
-#             to_news_category_for_human(news['Category']),
-#             news['NewsTags'],
-#             text,
-#             news['Url'],
-#             news['Source']];
-
-
-# s = to_news_collection_by_period('20210101', '20210331')
-# with open('news_collection_20210101_20210331.json', 'w', encoding='utf-8') as f:
-#     json.dump(s, f, ensure_ascii=False, indent=4, cls=TaskEncoder)
-
-# news_result = []
-# news_collection = jsons.of_json_file('news_collection_20210101_20210331.json')
-# for daily_news_dict in news_collection:
-#     for (id_uni, daily_news) in news_collection[daily_news_dict].items():
-#         if len(daily_news) > 0:
-#             for news in daily_news:
-#                 content = news['Content']
-#                 if not content == '':
-#                     text = texts.to_text(content)
-#                     news_result.append(to_news_record(id_uni, news))
-# print(news_result)
-# json.dumps(news_result, ensure_ascii=False, indent=4)
-
-
-# with open('test.csv', 'w',encoding='utf-8',newline='') as f:
-#     f_csv = csv.writer(f)
-#     f_csv.writerows(news_result)
+            name_list.append(news_category.get(news_categories))
+    return ','.join(name_list)
