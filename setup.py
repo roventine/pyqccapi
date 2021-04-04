@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pyqccapi",
-    version="0.1.4",
+    version="0.1.6",
     author="roventine",
     author_email="ukyotachibana@yeah.net",
     description="simple api task for qcc",
@@ -20,5 +20,5 @@ setuptools.setup(
         "Operating System :: OS Independent",
     ],
     python_requires='>=3.6',
-    install_requires=['requests', 'PyYAML','pywildcard'],
+    install_requires=['requests', 'PyYAML','pywildcard','Logbook'],
 )
