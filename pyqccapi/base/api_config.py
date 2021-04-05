@@ -103,21 +103,6 @@ class ApiConfig:
         to_json_file(os.path.join(self.path_api_config, 'method_detail_list.json'), method_detail_list)
         return self
 
-    # def to_method_url_dict(self):
-    #     method_url_dict = {}
-    #     method_detail_list = of_json_file('method_detail_list.json')
-    #     for method_detail in method_detail_list:
-    #         method_url_dict[method_detail['Method']['methodApiId']] = method_detail['Titles']['paramList']['apiUrl']
-    #     return method_url_dict
-
-    # def view_method(self, pattern):
-    #     result = []
-    #     method_list = of_json_file('method_list.json')
-    #     for method in method_list:
-    #         if pywildcard.fnmatch(method['methodApiName'], pattern) or pywildcard.fnmatch(method['apiTitle'], pattern):
-    #             result.append(method)
-    #     format_json(result)
-
     def view_method_detail(self, pattern: str):
         result = []
         for method_detail in self.method_list:
@@ -146,6 +131,3 @@ class ApiConfig:
         for method_detail in self.method_list:
             self.method_dict[method_detail['Method']['methodApiId']] = method_detail
         return self
-
-
-# ApiConfig.to_instance().view_method_detail("客户查询")

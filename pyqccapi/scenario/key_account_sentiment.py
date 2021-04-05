@@ -13,8 +13,7 @@ def to_news_detail_by_id(id_news: str) -> Task:
     params = {
         'id': id_news
     }
-    task = Task(method_id, params)
-    return to_task_invoker(task) \
+    return to_task_invoker(Task(method_id, params)) \
         .invoke() \
         .to_task()
 
@@ -37,22 +36,26 @@ def to_news_summary_list_at_date(id_uni: str, dt: str) -> list:
         'pageSize': page_size,
         'pageIndex': 1
     }
-    task = Task(method_id, params)
-    t = to_task_invoker(task).invoke().to_task()
 
-    if t.success:
-        total = t.data['Paging']['TotalRecords']
+    task = to_task_invoker(Task(method_id, params))\
+        .invoke()\
+        .to_task()
+
+    if task.success:
+        if task.data['Paging'] is not None:
+            total = task.data['Paging']['TotalRecords']
+        else:
+            return summary_list
     else:
-        task.code = t.code
-        task.message = t.message
         return summary_list
 
     page_count = total // page_size + 1
 
     for i in range(page_count + 1)[1:]:
         params['pageIndex'] = i
-        task = Task(method_id, params)
-        task = to_task_invoker(task).invoke().to_task()
+        task = to_task_invoker(Task(method_id, params))\
+            .invoke()\
+            .to_task()
         if task.success:
             for summary in task.data['Result']:
                 summary['CategoryName'] = to_news_category_for_human(summary['Category'])
@@ -67,9 +70,9 @@ def to_news_detail_by_summary(news: dict) -> dict:
     :param news:
     :return:
     """
-    t = to_news_detail_by_id(news['NewsId'])
-    if t.success:
-        news['Content'] = t.data['Result']['Content']
+    task = to_news_detail_by_id(news['NewsId'])
+    if task.success:
+        news['Content'] = task.data['Result']['Content']
     return news
 
 

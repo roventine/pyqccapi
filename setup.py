@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="pyqccapi",
-    version="0.1.6",
+    version="0.2.1",
     author="roventine",
     author_email="ukyotachibana@yeah.net",
     description="simple api task for qcc",

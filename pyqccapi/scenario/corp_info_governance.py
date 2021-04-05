@@ -20,8 +20,7 @@ def to_uni_id_by_name(name: str) -> str:
     params = {
         'searchKey': name
     }
-    task = Task(method_id, params)
-    task = to_task_invoker(task).invoke().to_task()
+    task = to_task_invoker(Task(method_id, params)).invoke().to_task()
     if task.success:
         return task.data['Result'][0]['CreditCode']
     return ''
@@ -30,6 +29,8 @@ def to_uni_id_by_name(name: str) -> str:
 def to_corp_info(corp: dict) -> dict:
     """
     根据企业名称，填充企业统一社会信用代码，返回企业对象
+    :param corp:
+    :return:
     """
     corp['id_uni'] = to_uni_id_by_name(corp['name'])
     return corp
@@ -38,6 +39,8 @@ def to_corp_info(corp: dict) -> dict:
 def to_corp_list(corp_list: list) -> list:
     """
     根据企业列表，填充统一社会信用代码，使用串行
+    :param corp_list:
+    :return:
     """
     new_corp_list = []
     for corp in corp_list:
@@ -75,7 +78,9 @@ def to_corp_list_parallel(corp_list: list) -> list:
 
 def purify_corp_name(name: str) -> str:
     """
-    处理企业名称，过滤包括（*）以及(*)结尾的企业，返回处理后的企业名称
+    清理客户注册时的附加信息，如 ****企业(专户)
+    :param name:
+    :return:
     """
     name = name.strip()
     if name.endswith(")") or name.endswith("）"):

@@ -14,14 +14,22 @@ def to_equity_through_by_id(uni_id: str) -> dict:
     :param uni_id:
     :return:
     """
+
+    result = {'uni_id': uni_id, 'equity': None}
     method_id = 'c2e25afe-65eb-4990-a609-110ffdf5963e'
     params = {
-        'keyWord': uni_id
+        'keyWord': uni_id,
+        'level': '4'
     }
-    task = Task(method_id, params)
-    return to_task_invoker(task) \
+
+    task = to_task_invoker(Task(method_id, params)) \
         .invoke() \
         .to_task()
+
+    if task.success:
+        result['equity'] = task.data['Result']
+
+    return result
 
 
 def to_equity_through_list(uni_id_list: list) -> list:
@@ -57,5 +65,3 @@ def to_equity_through_list_parallel(uni_id_list: list) -> list:
         equity_through_list.append(future.get())
 
     return equity_through_list
-
-
