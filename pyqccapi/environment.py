@@ -1,5 +1,5 @@
 class Environment(object):
-    _env = None  # type: Environment
+    _env = None
 
     def __init__(self, config):
         Environment._env = self

@@ -35,7 +35,7 @@ def to_client_by_id(uni_id: str) -> dict:
             page_count = total // page_size + 1
 
             if page_count > 1:
-                for i in range(page_count + 1)[1:]:
+                for i in range(page_count + 1)[2:]:
                     params['pageIndex'] = i
                     if to_task_invoker(Task(method_id, params)).invoke().to_task().success:
                         client_list += task.data['Result']['ClientList']
@@ -106,7 +106,7 @@ def to_distributor_by_id(uni_id: str) -> dict:
             page_count = total // page_size + 1
 
             if page_count > 1:
-                for i in range(page_count + 1)[1:]:
+                for i in range(page_count + 1)[2:]:
                     params['pageIndex'] = i
                     if to_task_invoker(Task(method_id, params)).invoke().to_task().success:
                         distributor_list += task.data['Result']['DistributorList']
