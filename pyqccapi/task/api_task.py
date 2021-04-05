@@ -35,8 +35,3 @@ class AsyncTask(Task):
     def __init__(self, method, params):
         Task.__init__(self, method, params)
         self.task_id = uuid.uuid4().hex
-
-
-
-
-

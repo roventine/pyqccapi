@@ -51,16 +51,12 @@ class ApiInvoker:
             code = int(r.json()['Status'])
             self.task.code = code
             if code == 200:
-                # self.task.data = json.dumps(str(r.content, encoding=encode))\
-                #     .encode(encode)\
-                #     .decode("unicode-escape")
                 self.task.data = r.json()
                 self.task.success = True
             else:
                 self.task.message = error_code.get(str(code), '')
         else:
             self.task.code = r.status_code
-            # self.task.message = error_code[r.status_code]
 
         # logger.info(json.dumps(self.task, ensure_ascii=False, cls=TaskEncoder))
 

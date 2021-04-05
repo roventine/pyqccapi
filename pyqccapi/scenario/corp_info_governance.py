@@ -1,4 +1,3 @@
-import os
 from multiprocessing.pool import Pool
 
 from pyqccapi.scenario.base_scenario import *
