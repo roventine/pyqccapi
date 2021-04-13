@@ -4,7 +4,7 @@ from multiprocessing.pool import Pool
 from pyqccapi.scenario.base_scenario import *
 
 """
-股权穿透，用于获取客户股权关系图谱
+股权穿透，用于构建客户股权关系图谱
 """
 
 

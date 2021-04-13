@@ -131,3 +131,6 @@ class ApiConfig:
         for method_detail in self.method_list:
             self.method_dict[method_detail['Method']['methodApiId']] = method_detail
         return self
+
+
+# ApiConfig.to_instance().view_method_detail("主要人员")
