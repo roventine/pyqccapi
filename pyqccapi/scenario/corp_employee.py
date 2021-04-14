@@ -1,15 +1,13 @@
 from multiprocessing.pool import Pool
 
-from pyqccapi.constant import *
 from pyqccapi.scenario.base_scenario import *
-
 
 """
 企业主要人员，用于打通对公到对私的主要场景
 """
 
 
-def to_employee_list_by_id(uni_id: str) -> dict:
+def to_employee_list_by_id(uni_id: str) -> list:
     """
     根据统一社会信用代码，获取一个企业的员工列表
     :param uni_id:

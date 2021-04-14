@@ -3,7 +3,6 @@ from multiprocessing.pool import Pool
 from pyqccapi.constant import *
 from pyqccapi.scenario.base_scenario import *
 
-# from pyqccapi.util.dates import *
 
 """
 获取重点企业的舆情信息，用于进一步文本挖掘

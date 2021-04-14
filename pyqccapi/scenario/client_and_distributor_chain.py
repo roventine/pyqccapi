@@ -14,7 +14,6 @@ def to_client_by_id(uni_id: str) -> dict:
     :param uni_id:
     :return:
     """
-
     result = {'uni_id': uni_id, 'client_list': []}
     client_list = []
     page_size = 50
