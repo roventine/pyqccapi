@@ -31,7 +31,7 @@ def to_corp_info(corp: dict) -> dict:
     :param corp:
     :return:
     """
-    corp['id_uni'] = to_uni_id_by_name(corp['name'])
+    corp['uni_id'] = to_uni_id_by_name(corp['name'])
     return corp
 
 
