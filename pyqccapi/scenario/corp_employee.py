@@ -4,6 +4,7 @@ from pyqccapi.scenario.base_scenario import *
 
 """
 企业主要人员，用于打通对公到对私的主要场景
+TO_DO：缺乏个人客户标识（证件号）
 """
 
 
