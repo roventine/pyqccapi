@@ -133,4 +133,4 @@ class ApiConfig:
         return self
 
 
-# ApiConfig.to_instance().view_method_detail("主要人员")
+# ApiConfig.to_instance().view_method_detail("信用评级")

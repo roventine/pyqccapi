@@ -21,9 +21,7 @@ def to_equity_through_by_id(uni_id: str) -> dict:
         'level': '4'
     }
 
-    task = to_task_invoker(Task(method_id, params)) \
-        .invoke() \
-        .to_task()
+    task = to_task_invoker(Task(method_id, params)).invoke().to_task()
 
     if task.success:
         result['equity'] = task.data['Result']
@@ -64,3 +62,6 @@ def to_equity_through_list_parallel(uni_id_list: list) -> list:
         equity_through_list.append(future.get())
 
     return equity_through_list
+
+
+to_equity_through_by_id('')
