@@ -40,7 +40,7 @@ def to_credit_rating_list(uni_id_list: list) -> list:
     return credit_rating_list
 
 
-def to_credit_rating_list(uni_id_list: list) -> list:
+def to_credit_rating_list_parallel(uni_id_list: list) -> list:
     """
 
     """

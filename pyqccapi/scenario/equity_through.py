@@ -62,6 +62,3 @@ def to_equity_through_list_parallel(uni_id_list: list) -> list:
         equity_through_list.append(future.get())
 
     return equity_through_list
-
-
-to_equity_through_by_id('')
